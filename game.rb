@@ -11,16 +11,19 @@ background = Image.new( #https://opengameart.org/content/background-6
     'img/background.png',
 )
 
+#skapar scoreboarden uppe i vänstra hörnet
 score = 0
-
 text = Text.new(score, x: 10, y: 10, size: 20, color: 'white')
 
+#skapar tileset med 32x32 tiles som jag kan använda för att skapa banan
 tileset = Ruby2D::Tileset.new(
     'img/tileset.png',
     tile_width: 32,
     tile_height: 32,
     scale: 1,
 )
+
+#2d-array där jag kan lägga in tiles på koordinater
 tiles1 = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -36,7 +39,8 @@ tiles1 = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,"f",0,0,0,0,0,"pl","pm","pr",0,0,"pl","pr",0,0,0,0,0,0,0,0,0],
 [0,"pl","pm","pm","pr",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],]
-#platforms
+
+#tiles
 tileset.define_tile(
     'platform_left',
     4,
@@ -67,6 +71,8 @@ tileset.define_tile(
     3,
     0,
 )
+
+#funktion som ritar upp banan, konverterar positioner i arrayen till koordinater i spelfönstret
 def draw_level(tiles, tileset)
     tiles.each_with_index do |row, i|
         row.each_with_index do |tile, j|
@@ -84,9 +90,9 @@ def draw_level(tiles, tileset)
         end
     end
 end
-
 draw_level(tiles1, tileset)
 
+#skapar karaktären
 hero = Sprite.new(
     'img/character1.png', #https://opengameart.org/content/a-platformer-in-the-forest
     width: 64,
@@ -102,6 +108,7 @@ hero = Sprite.new(
   }
 )
 
+#flytta på karaktären med piltangenterna, innehåller if-satser som känner av om det finns plattformar under eller bredvid sig
 on :key_held do |event|
     case event.key
     when 'left'
@@ -151,6 +158,7 @@ on :key_held do |event|
         end
     end
 
+    #om man står på en orb ska sitt score gå upp, fick inte riktigt det här att fungera dock
     if tiles1[hero.y / 32][hero.x / 32] == "o"
         score += 1
         text.text = score
@@ -158,7 +166,9 @@ on :key_held do |event|
     
 end
 
+#stannar animationerna när man står stilla
 on :key_up do
     hero.stop
 end
+
 show
